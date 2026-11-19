@@ -216,6 +216,143 @@ saveHomework();
 
 showHomework();
 </script>
+
+<div class="card">
+  <h2>Revision Planner</h2>
+
+  <input id="revisionTopic" placeholder="Revision topic">
+
+  <select id="revisionSubject">
+    <option>Mathematics</option>
+    <option>Economics</option>
+    <option>Law</option>
+  </select>
+
+  <input id="revisionDate" type="date">
+
+  <select id="revisionDuration">
+    <option value="30">30 minutes</option>
+    <option value="45">45 minutes</option>
+    <option value="60">60 minutes</option>
+    <option value="90">90 minutes</option>
+    <option value="120">120 minutes</option>
+  </select>
+
+  <button type="button" onclick="addRevision()">
+    Add Revision Session
+  </button>
+
+  <div id="revisionList"></div>
+</div>
+
+<style>
+#revisionTopic,
+#revisionDate,
+#revisionSubject,
+#revisionDuration {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin-top: 10px;
+  background: #091827;
+  color: white;
+  border: 1px solid #65d9ff;
+  border-radius: 9px;
+  font-size: 16px;
+}
+
+.revision-item {
+  padding: 12px;
+  margin-top: 10px;
+  background: #203d55;
+  border-radius: 9px;
+}
+</style>
+
+<script>
+let revisionSessions = JSON.parse(
+  localStorage.getItem("jarvisRevision") || "[]"
+);
+
+function showRevision() {
+  const list = document.getElementById("revisionList");
+  list.innerHTML = "";
+
+  revisionSessions.forEach((item, index) => {
+    const row = document.createElement("div");
+    row.className = "revision-item";
+
+    const label = document.createElement("span");
+    label.textContent =
+      item.subject + " — " + item.topic +
+      " | " + item.date +
+      " | " + item.duration + " minutes ";
+
+    if (item.done) {
+      label.style.textDecoration = "line-through";
+    }
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = item.done ? "Undo" : "Complete";
+
+    button.onclick = () => {
+      revisionSessions[index].done = !item.done;
+      saveRevision();
+    };
+
+    row.append(label, button);
+    list.appendChild(row);
+  });
+}
+
+function saveRevision() {
+  localStorage.setItem(
+    "jarvisRevision",
+    JSON.stringify(revisionSessions)
+  );
+  showRevision();
+}
+
+function addRevision() {
+  const topic = document.getElementById(
+    "revisionTopic"
+  ).value.trim();
+
+  const subject = document.getElementById(
+    "revisionSubject"
+  ).value;
+
+  const date = document.getElementById(
+    "revisionDate"
+  ).value;
+
+  const duration = document.getElementById(
+    "revisionDuration"
+  ).value;
+
+  if (!topic || !date) {
+    alert("Enter a revision topic and date.");
+    return;
+  }
+
+  revisionSessions.push({
+    topic: topic,
+    subject: subject,
+    date: date,
+    duration: duration,
+    done: false
+  });
+
+  document.getElementById("revisionTopic").value = "";
+  document.getElementById("revisionDate").value = "";
+
+  saveRevision();
+}
+
+showRevision();
+</script>
+
 <footer>JARVIS ACADEMIC SYSTEM | VERSION 1.2</footer>
 
 <script>
