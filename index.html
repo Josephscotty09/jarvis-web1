@@ -5,52 +5,186 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#091827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="JARVIS">
 <title>J.A.R.V.I.S.</title>
 <style>
+* {box-sizing:border-box}
 body {
-  background: #091827;
-  color: white;
-  font-family: Arial, sans-serif;
-  padding: 25px;
+  background:#091827;
+  color:white;
+  font-family:-apple-system,Arial,sans-serif;
+  margin:0;
+  padding:22px;
 }
-h1 { color: #65d9ff; }
+h1 {color:#65d9ff;letter-spacing:3px}
+h2 {color:#65d9ff;font-size:19px}
+.subtitle {color:#9bb8ce}
 .card {
-  background: #142b40;
-  padding: 20px;
-  margin: 15px 0;
-  border-radius: 15px;
+  background:#142b40;
+  border:1px solid #294b65;
+  padding:18px;
+  margin:16px 0;
+  border-radius:15px;
 }
-button {
-  background: #1585bc;
-  color: white;
-  border: none;
-  padding: 12px;
-  border-radius: 8px;
+.lesson {
+  padding:11px 0;
+  border-bottom:1px solid #35536b;
+}
+.lesson:last-child {border:0}
+.time {color:#65d9ff;font-weight:bold}
+select {
+  width:100%;
+  padding:12px;
+  background:#091827;
+  color:white;
+  border:1px solid #65d9ff;
+  border-radius:9px;
+  font-size:16px;
+}
+footer {
+  color:#7899af;
+  text-align:center;
+  padding:20px;
+  font-size:12px;
 }
 </style>
 </head>
 <body>
+
 <h1>J.A.R.V.I.S.</h1>
-<p>Personal Academic Assistant</p>
+<p class="subtitle">ACADEMIC COMMAND CENTRE</p>
 
 <div class="card">
-<h2>Welcome</h2>
-<p>JARVIS is online.</p>
-<p>Mission: A*A*A*</p>
+<h2>System Online</h2>
+<p id="date"></p>
+<p>Academic mission: A*A*A*</p>
+<p class="subtitle">
+Runshaw College | First Year A-Level
+</p>
 </div>
 
 <div class="card">
 <h2>My Subjects</h2>
-<p>Mathematics</p>
-<p>Economics</p>
-<p>Law</p>
+<p>Mathematics — Edexcel</p>
+<p>Economics — AQA</p>
+<p>Law — OCR</p>
 </div>
 
 <div class="card">
-<h2>Academic Dashboard</h2>
-<p>Homework tracker: Coming soon</p>
-<p>Revision planner: Coming soon</p>
-<p>AI assistant: Coming soon</p>
+<h2>Today's Timetable</h2>
+<select id="day" onchange="showLessons()">
+<option>Monday</option>
+<option>Tuesday</option>
+<option>Wednesday</option>
+<option>Thursday</option>
+<option>Friday</option>
+<option>Saturday</option>
+<option>Sunday</option>
+</select>
+<div id="lessons"></div>
 </div>
+
+<div class="card">
+<h2>Study Priorities</h2>
+<p>Mathematics: Exponentials</p>
+<p>Economics: Graphs and exam technique</p>
+<p>Law: UK court system</p>
+<p class="subtitle">
+Suggested focus areas, not confirmed tasks.
+</p>
+</div>
+
+<div class="card">
+<h2>Coming Next</h2>
+<p>Homework and deadlines tracker</p>
+<p>Revision planner</p>
+<p>Assessment performance dashboard</p>
+</div>
+
+<footer>JARVIS ACADEMIC SYSTEM | VERSION 1.2</footer>
+
+<script>
+const timetable = {
+Monday:[
+["09:00","Directed Study / ASPIRE"],
+["10:10","Mathematics"],
+["11:20","Economics"],
+["12:30","Directed Study / Lunch"],
+["14:30","Law"]
+],
+Tuesday:[
+["09:00","Economics"],
+["10:10","Directed Study"],
+["11:20","Law"],
+["12:30","Directed Study / Lunch"],
+["14:30","Mathematics"]
+],
+Wednesday:[
+["Daytime","Independent Study"],
+["Evening","Church commitment"]
+],
+Thursday:[
+["09:00","Mathematics"],
+["10:10","Economics"],
+["11:20","Directed Study / Lunch"],
+["13:20","Law"],
+["14:30","Progress Mentor Group"],
+["15:00","Progress Mentor 1-to-1"]
+],
+Friday:[
+["09:00","Law"],
+["10:10","Directed Study"],
+["11:20","Mathematics"],
+["12:30","Lunch"],
+["13:20","Economics"],
+["14:30","Directed Study"]
+],
+Saturday:[
+["Variable","McDonald's work"]
+],
+Sunday:[
+["Daytime","Church commitments"],
+["20:00","Weekly academic review"]
+]
+};
+
+function showLessons() {
+const day=document.getElementById("day").value;
+const box=document.getElementById("lessons");
+box.replaceChildren();
+
+timetable[day].forEach(item=>{
+const row=document.createElement("div");
+row.className="lesson";
+
+const time=document.createElement("span");
+time.className="time";
+time.textContent=item[0]+" — ";
+
+const name=document.createElement("span");
+name.textContent=item[1];
+
+row.append(time,name);
+box.appendChild(row);
+});
+}
+
+const now=new Date();
+document.getElementById("date").textContent=
+now.toLocaleDateString("en-GB",{
+weekday:"long",
+day:"numeric",
+month:"long",
+year:"numeric"
+});
+
+document.getElementById("day").value=
+now.toLocaleDateString("en-GB",{
+weekday:"long"
+});
+
+showLessons();
+</script>
 </body>
 </html>
