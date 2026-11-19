@@ -102,6 +102,120 @@ Suggested focus areas, not confirmed tasks.
 <p>Assessment performance dashboard</p>
 </div>
 
+
+<div class="card">
+<h2>Homework Tracker</h2>
+
+<input id="homework" placeholder="Enter homework">
+<br><br>
+
+<select id="hwSubject">
+<option>Mathematics</option>
+<option>Economics</option>
+<option>Law</option>
+</select>
+<br><br>
+
+<input id="hwDate" type="date">
+<br><br>
+
+<button onclick="addHomework()">Add Homework</button>
+
+<div id="hwList"></div>
+</div>
+
+<style>
+#homework,#hwDate {
+width:100%;
+padding:12px;
+background:#091827;
+color:white;
+border:1px solid #65d9ff;
+border-radius:9px;
+font-size:16px;
+}
+button {
+background:#1585bc;
+color:white;
+border:0;
+padding:12px;
+border-radius:9px;
+margin-top:10px;
+}
+.hw-item {
+padding:12px;
+margin-top:10px;
+background:#203d55;
+border-radius:9px;
+}
+</style>
+
+<script>
+let homeworkList = JSON.parse(
+localStorage.getItem("jarvisHomework") || "[]"
+);
+
+function showHomework() {
+const list=document.getElementById("hwList");
+list.innerHTML="";
+
+homeworkList.forEach((item,index)=>{
+const row=document.createElement("div");
+row.className="hw-item";
+
+const label=document.createElement("span");
+label.textContent=
+item.subject+" — "+item.name+
+" | Due: "+item.date+" ";
+
+if(item.done){
+label.style.textDecoration="line-through";
+}
+
+const button=document.createElement("button");
+button.textContent=item.done?"Undo":"Complete";
+button.onclick=()=>{
+homeworkList[index].done=!item.done;
+saveHomework();
+};
+
+row.append(label,button);
+list.appendChild(row);
+});
+}
+
+function saveHomework(){
+localStorage.setItem(
+"jarvisHomework",
+JSON.stringify(homeworkList)
+);
+showHomework();
+}
+
+function addHomework(){
+const name=document.getElementById("homework").value.trim();
+const subject=document.getElementById("hwSubject").value;
+const date=document.getElementById("hwDate").value;
+
+if(!name||!date){
+alert("Enter homework and a deadline.");
+return;
+}
+
+homeworkList.push({
+name:name,
+subject:subject,
+date:date,
+done:false
+});
+
+document.getElementById("homework").value="";
+document.getElementById("hwDate").value="";
+saveHomework();
+}
+
+showHomework();
+</script>
 <footer>JARVIS ACADEMIC SYSTEM | VERSION 1.2</footer>
 
 <script>
